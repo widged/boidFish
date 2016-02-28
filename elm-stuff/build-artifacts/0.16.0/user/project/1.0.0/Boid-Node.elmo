@@ -1,0 +1,18 @@
+Elm.Boid = Elm.Boid || {};
+Elm.Boid.Node = Elm.Boid.Node || {};
+Elm.Boid.Node.make = function (_elm) {
+   "use strict";
+   _elm.Boid = _elm.Boid || {};
+   _elm.Boid.Node = _elm.Boid.Node || {};
+   if (_elm.Boid.Node.values) return _elm.Boid.Node.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var margin = 30;
+   return _elm.Boid.Node.values = {_op: _op,margin: margin};
+};

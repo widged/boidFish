@@ -1,0 +1,62 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $BoidLayout = Elm.BoidLayout.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Mouse = Elm.Mouse.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Window = Elm.Window.make(_elm);
+   var _op = {};
+   var updateForm = F2(function (form,_p0) {
+      var _p1 = _p0;
+      return A2($Graphics$Collage.alpha,
+      _p1._4,
+      A2($Graphics$Collage.scale,
+      _p1._3,
+      A2($Graphics$Collage.rotate,_p1._2,A2($Graphics$Collage.move,{ctor: "_Tuple2",_0: $Basics.toFloat(_p1._0),_1: $Basics.toFloat(_p1._1)},form))));
+   });
+   var boidFish = function () {
+      var repeat = $List.repeat;
+      var spine = $Graphics$Collage.toForm(A3($Graphics$Element.image,38,25,"/imgs/spine.png"));
+      var fin = $Graphics$Collage.toForm(A3($Graphics$Element.image,39,63,"/imgs/fin.png"));
+      var head = $Graphics$Collage.toForm(A3($Graphics$Element.image,42,25,"/imgs/head.png"));
+      var fish = A2($Basics._op["++"],
+      _U.list([head]),
+      A2($Basics._op["++"],
+      A2(repeat,2,spine),
+      A2($Basics._op["++"],_U.list([fin]),A2($Basics._op["++"],A2(repeat,9,spine),A2($Basics._op["++"],_U.list([fin]),A2(repeat,6,spine))))));
+      return {boid: fish};
+   }();
+   var boidLayout = $BoidLayout.initLayout($List.length(boidFish.boid));
+   var boidLayoutReducer = A3($Signal.foldp,$BoidLayout.update,boidLayout,$Mouse.position);
+   var scene = F2(function (_p2,boidLayout) {
+      var _p3 = _p2;
+      var _p8 = _p3._0;
+      var _p7 = _p3._1;
+      var _p4 = {ctor: "_Tuple2",_0: $Basics.round($Basics.toFloat(_p8) / 2),_1: $Basics.round($Basics.toFloat(_p7) / 2)};
+      var wcx = _p4._0;
+      var wcy = _p4._1;
+      var screenRel = function (_p5) {    var _p6 = _p5;return {ctor: "_Tuple5",_0: _p6._0 - wcx,_1: wcy - _p6._1,_2: _p6._2,_3: _p6._3,_4: _p6._4};};
+      var screenLayout = A2($List.map,screenRel,boidLayout);
+      return A3($Graphics$Collage.collage,_p8,_p7,A3($List.map2,updateForm,boidFish.boid,screenLayout));
+   });
+   var main = A3($Signal.map2,scene,$Window.dimensions,boidLayoutReducer);
+   var BoidFish = function (a) {    return {boid: a};};
+   return _elm.Main.values = {_op: _op
+                             ,BoidFish: BoidFish
+                             ,boidFish: boidFish
+                             ,boidLayout: boidLayout
+                             ,updateForm: updateForm
+                             ,scene: scene
+                             ,main: main
+                             ,boidLayoutReducer: boidLayoutReducer};
+};

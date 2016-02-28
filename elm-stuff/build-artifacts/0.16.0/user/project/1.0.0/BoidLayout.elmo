@@ -1,0 +1,104 @@
+Elm.BoidLayout = Elm.BoidLayout || {};
+Elm.BoidLayout.make = function (_elm) {
+   "use strict";
+   _elm.BoidLayout = _elm.BoidLayout || {};
+   if (_elm.BoidLayout.values) return _elm.BoidLayout.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var updateNode = F2(function (previousItem,item) {    return item;});
+   var average = F2(function (a,b) {    return $Basics.round($Basics.toFloat(a + b) / 2);});
+   var dampenByFactor = F2(function (factor,x) {    return $Basics.round($Basics.toFloat(x) / factor);});
+   var diff = F2(function (_p1,_p0) {    var _p2 = _p1;var _p3 = _p0;return {ctor: "_Tuple2",_0: _p2._0 - _p3._0,_1: _p2._1 - _p3._1};});
+   var layoutPos = F2(function (_p4,idx) {
+      var _p5 = _p4;
+      var scale = 1.0;
+      var alpha = 1.0;
+      var angle = 0.0;
+      var sp = 9;
+      return {ctor: "_Tuple5",_0: _p5._0 + sp * idx,_1: _p5._1,_2: angle,_3: scale,_4: alpha};
+   });
+   var initLayout = function (segmentQty) {    return A2($List.map,layoutPos({ctor: "_Tuple2",_0: 0,_1: 0}),_U.range(1,segmentQty));};
+   var compactFactor = 1.3;
+   var alphaFactor = 0.95;
+   var scaleFactor = 0.96;
+   var reduceBody = F2(function (previousItem,items) {
+      var _p6 = items;
+      if (_p6.ctor === "[]") {
+            return _U.list([]);
+         } else {
+            var dampen = dampenByFactor(compactFactor);
+            var _p7 = previousItem;
+            var x = _p7._0;
+            var y = _p7._1;
+            var a = _p7._2;
+            var b = _p7._3;
+            var c = _p7._4;
+            var _p8 = _p6._0;
+            var px = _p8._0;
+            var py = _p8._1;
+            var ha = _p8._2;
+            var hb = _p8._3;
+            var hc = _p8._4;
+            var _p9 = A2(diff,{ctor: "_Tuple2",_0: x,_1: y},{ctor: "_Tuple2",_0: px,_1: py});
+            var dx = _p9._0;
+            var dy = _p9._1;
+            var radian = $Basics.pi - A2($Basics.atan2,$Basics.toFloat(dy),$Basics.toFloat(dx));
+            var _p10 = {ctor: "_Tuple2",_0: A2(average,px,px + dampen(dx)),_1: A2(average,py,py + dampen(dy))};
+            var ex = _p10._0;
+            var ey = _p10._1;
+            var head$ = {ctor: "_Tuple5",_0: ex,_1: ey,_2: radian,_3: b * scaleFactor,_4: c * alphaFactor};
+            return A2($Basics._op["++"],_U.list([head$]),A2(reduceBody,head$,_p6._1));
+         }
+   });
+   var dampR = 10;
+   var updateHead = F2(function (item,_p11) {
+      var _p12 = _p11;
+      var dampen = dampenByFactor(dampR);
+      var _p13 = item;
+      var px = _p13._0;
+      var py = _p13._1;
+      var a = _p13._2;
+      var b = _p13._3;
+      var c = _p13._4;
+      var _p14 = A2(diff,{ctor: "_Tuple2",_0: _p12._0,_1: _p12._1},{ctor: "_Tuple2",_0: px,_1: py});
+      var dx = _p14._0;
+      var dy = _p14._1;
+      var radian = $Basics.pi - A2($Basics.atan2,$Basics.toFloat(dy),$Basics.toFloat(dx));
+      var _p15 = {ctor: "_Tuple2",_0: A2(average,px,px + dampen(dx)),_1: A2(average,py,py + dampen(dy))};
+      var ex = _p15._0;
+      var ey = _p15._1;
+      var scale = 1.0;
+      var alpha = 1.0;
+      return {ctor: "_Tuple5",_0: ex,_1: ey,_2: radian,_3: scale,_4: alpha};
+   });
+   var update = F2(function (_p16,layout) {
+      var _p17 = _p16;
+      var _p18 = layout;
+      if (_p18.ctor === "[]") {
+            return _U.list([]);
+         } else {
+            var head$ = A2(updateHead,_p18._0,{ctor: "_Tuple2",_0: _p17._0,_1: _p17._1});
+            return A2($Basics._op["++"],_U.list([head$]),A2(reduceBody,head$,_p18._1));
+         }
+   });
+   return _elm.BoidLayout.values = {_op: _op
+                                   ,dampR: dampR
+                                   ,scaleFactor: scaleFactor
+                                   ,alphaFactor: alphaFactor
+                                   ,compactFactor: compactFactor
+                                   ,layoutPos: layoutPos
+                                   ,initLayout: initLayout
+                                   ,diff: diff
+                                   ,dampenByFactor: dampenByFactor
+                                   ,average: average
+                                   ,update: update
+                                   ,updateHead: updateHead
+                                   ,reduceBody: reduceBody
+                                   ,updateNode: updateNode};
+};
