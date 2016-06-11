@@ -11,15 +11,6 @@ import Task
 
 main = Html.App.program { init = init, view = view, update = update , subscriptions = subscriptions }
 
--- Data
-
-type alias Model = {window: (Int, Int), layout: BoidLayout}
-
-boidLayout = BoidLayout.initLayout (List.length boidFish.boid)
-
-init : (Model, Cmd Msg)
-init = ({window = (800, 800), layout = boidLayout} , initialSizeCmd)
-
 -- Interactivity
 
 type Msg = WindowResize (Int, Int) | MouseMsg Mouse.Position | NoOp
@@ -30,7 +21,6 @@ subscriptions model = Sub.batch [
     Mouse.moves MouseMsg
   ]
 
-
 initialSizeCmd : Cmd Msg
 initialSizeCmd =
   Task.perform (\_ -> NoOp) sizeToMsg Window.size
@@ -39,17 +29,27 @@ sizeToMsg : Window.Size -> Msg
 sizeToMsg size =
   WindowResize (size.width, size.height)
 
+
+-- Data
+
+type alias Model = {window: (Int, Int), layout: BoidLayout}
+
+boidLayout = BoidLayout.init (List.length boidFish.boid)
+
+init : (Model, Cmd Msg)
+init = ({window = (800, 800), layout = boidLayout} , initialSizeCmd)
+
 -- Application states
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     WindowResize (w, h)  ->
-      ({window = (w, h), layout = model.layout}, Cmd.none)
+      ({ model | window = (w, h) }, Cmd.none)
     NoOp  ->
-      ({window = model.window, layout = model.layout}, Cmd.none)
+      (model, Cmd.none)
     MouseMsg position ->
-      ({window = model.window, layout = BoidLayout.update (position.x, position.y) model.layout}, Cmd.none)
+      ({ model | layout = BoidLayout.update (position.x, position.y) model.layout }, Cmd.none)
 
 -- View
 
@@ -65,7 +65,7 @@ view model =
   in
     Html.div []
         [
-          Html.div [] [Html.text (toString model.window)],
+          Html.div [] [Html.text ("Move your mouse around. " ++ "Window dimensions " ++ (toString model.window))],
           -- Html.div [] [Html.text (toString model)],
           collage w h
             [ group (List.map2 updateForm boidFish.boid screenLayout) ]
@@ -75,9 +75,7 @@ view model =
 updateForm : (Form) -> (Int, Int, Float, Float, Float) -> Form
 updateForm (form) (x,y,angle,scalez,alphaz) =  form |> move ( toFloat x, toFloat y) |> rotate angle |> scale scalez |> alpha alphaz
 
-type alias BoidFish = {
-  boid: List Form
-}
+type alias BoidFish = { boid: List Form }
 boidFish : BoidFish
 boidFish =
   let

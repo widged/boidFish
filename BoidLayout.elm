@@ -2,7 +2,7 @@
 Adapted from a BIONIC SIMULATION (C) 2001 - Luis Pabon (luis@pabon.com) made available on FlashKit
 Original mentions that "You can freely use and modify this code but please, give credit to the author"
 -}
-module BoidLayout exposing (..)
+module BoidLayout exposing (BoidLayout, init, update)
 
 import Debug
 
@@ -24,8 +24,8 @@ layoutPos   (x,y)          idx =
   in
     (x + (sp* idx) , y, angle, scale, alpha)
 
-initLayout : Int -> BoidLayout
-initLayout segmentQty  = List.map (layoutPos (0, 0)) [1..segmentQty]
+init : Int -> BoidLayout
+init segmentQty  = List.map (layoutPos (0, 0)) [1..segmentQty]
 
 diff : (Int,Int) -> (Int,Int) -> (Int,Int)
 diff (x,y) (px,py) = ( x - px , y - py)
