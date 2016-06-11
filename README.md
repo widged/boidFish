@@ -5,6 +5,7 @@
 To check the outcome
 
 ```bash
+elm package install
 elm-reactor
 open http://localhost:8000/Main.elm
 ```
