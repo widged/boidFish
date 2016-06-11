@@ -1,4 +1,3 @@
-
 import Html exposing (Html)
 import Html.App
 import Element
@@ -82,16 +81,11 @@ type alias BoidFish = {
 boidFish : BoidFish
 boidFish =
   let
-    head = toForm (Element.image 42 25 "/imgs/head.png" )
-    fin   = toForm (Element.image 39 63 "/imgs/fin.png" )
-    spine = toForm (Element.image 38 25 "/imgs/spine.png" )
+    head = toForm (Element.image 42 25 "imgs/head.png" )
+    fin   = toForm (Element.image 39 63 "imgs/fin.png" )
+    spine = toForm (Element.image 38 25 "imgs/spine.png" )
     fish = [head] ++ repeat 2 spine ++ [fin] ++ repeat 9 spine  ++ [fin] ++ repeat 6 spine
     repeat = List.repeat
   in {
     boid = fish
  }
-
-
-{-
-
--}
