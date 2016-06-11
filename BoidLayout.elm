@@ -2,10 +2,11 @@
 Adapted from a BIONIC SIMULATION (C) 2001 - Luis Pabon (luis@pabon.com) made available on FlashKit
 Original mentions that "You can freely use and modify this code but please, give credit to the author"
 -}
-module BoidLayout where
+module BoidLayout exposing (..)
 
 import Debug
 
+type alias BoidLayout = List LayoutItem
 type alias LayoutItem = (Int, Int, Float, Float,Float)
 
 dampR         = 10 -- how slow the fish follows the mouse for firstNode only
@@ -23,7 +24,7 @@ layoutPos   (x,y)          idx =
   in
     (x + (sp* idx) , y, angle, scale, alpha)
 
-initLayout : Int -> List LayoutItem
+initLayout : Int -> BoidLayout
 initLayout segmentQty  = List.map (layoutPos (0, 0)) [1..segmentQty]
 
 diff : (Int,Int) -> (Int,Int) -> (Int,Int)
@@ -35,10 +36,10 @@ dampenByFactor factor x = round(toFloat x / factor)
 average : Int -> Int -> Int
 average a b = round ((toFloat (a + b)) / 2)
 
-update : (Int, Int) -> List LayoutItem -> List LayoutItem
+update : (Int, Int) -> BoidLayout -> BoidLayout
 update (x, y) layout =
   case layout of
-    [] -> [] -- never occurs, fuck you elm
+    [] -> [] -- never occurs
     head::tail ->
       let
         -- watchLay = Debug.watch "head,tail" (head, tail)
@@ -60,7 +61,7 @@ updateHead item (x,y) =
   in
     (ex, ey, radian, scale, alpha)
 
-reduceBody : LayoutItem -> List LayoutItem -> List LayoutItem
+reduceBody : LayoutItem -> BoidLayout -> BoidLayout
 reduceBody previousItem items =
   case items of
       [] -> []
