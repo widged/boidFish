@@ -5690,9 +5690,9 @@ Elm.Main.make = function (_elm) {
    });
    var boidFish = function () {
       var repeat = $List.repeat;
-      var spine = $Graphics$Collage.toForm(A3($Graphics$Element.image,38,25,"imgs/spine.png"));
-      var fin = $Graphics$Collage.toForm(A3($Graphics$Element.image,39,63,"imgs/fin.png"));
-      var head = $Graphics$Collage.toForm(A3($Graphics$Element.image,42,25,"imgs/head.png"));
+      var spine = $Graphics$Collage.toForm(A3($Graphics$Element.image,38,25,"/imgs/spine.png"));
+      var fin = $Graphics$Collage.toForm(A3($Graphics$Element.image,39,63,"/imgs/fin.png"));
+      var head = $Graphics$Collage.toForm(A3($Graphics$Element.image,42,25,"/imgs/head.png"));
       var fish = A2($Basics._op["++"],
       _U.list([head]),
       A2($Basics._op["++"],
