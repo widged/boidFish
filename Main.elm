@@ -6,10 +6,11 @@ import Collage exposing (..)
 import Mouse
 import BoidLayout exposing (BoidLayout)
 import Task
+import Debug
 
 -- http://0.0.0.0:8000/Main.elm?debug -- debug disabled in early realase of 0.17
 
-main = Html.App.program { init = init, view = view, update = update , subscriptions = subscriptions }
+main = Html.App.program { init = init, view = render, update = update , subscriptions = subscriptions }
 
 -- Interactivity
 
@@ -32,17 +33,27 @@ sizeToMsg size =
 
 -- Data
 
-type alias Model = {window: (Int, Int), layout: BoidLayout}
-
-boidLayout = BoidLayout.init (List.length boidFish.boid)
+type alias Model = {
+    window: (Int, Int),
+    layout: BoidLayout
+  }
 
 init : (Model, Cmd Msg)
-init = ({window = (800, 800), layout = boidLayout} , initialSizeCmd)
+init = (
+    {
+      window = (800, 800),
+      layout = BoidLayout.init (List.length boidFish.boid)
+    },
+    initialSizeCmd
+  )
 
 -- Application states
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
+  let
+    x = Debug.log "log_id" "value"
+  in
   case msg of
     WindowResize (w, h)  ->
       ({ model | window = (w, h) }, Cmd.none)
@@ -53,8 +64,8 @@ update msg model =
 
 -- View
 
-view : Model -> Html Msg
-view model =
+render : Model -> Html Msg
+render model =
   let
     (w,h) = model.window
     (wcx,wcy) = (round (toFloat w /2), round (toFloat h /2))
@@ -73,7 +84,8 @@ view model =
         ]
 
 updateForm : (Form) -> (Int, Int, Float, Float, Float) -> Form
-updateForm (form) (x,y,angle,scalez,alphaz) =  form |> move ( toFloat x, toFloat y) |> rotate angle |> scale scalez |> alpha alphaz
+updateForm (form) (x,y,angle,scalez,alphaz) =
+  form |> move ( toFloat x, toFloat y) |> rotate angle |> scale scalez |> alpha alphaz
 
 type alias BoidFish = { boid: List Form }
 boidFish : BoidFish
